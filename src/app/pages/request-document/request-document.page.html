@@ -1,0 +1,75 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Request Document</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="request-document-content">
+  <!-- Timestamp -->
+  <div class="timestamp">
+    <p class="date-time">{{ dateNow }} | {{ timeNow }}</p>
+  </div>
+
+  <!-- Form Section -->
+  <div class="form-section">
+    <h2>Request Document</h2>
+    <p class="instruction">Please fill out the form below to submit your request.</p>
+
+    <!-- Document Type -->
+    <ion-item>
+      <ion-label position="floating">Document Type*</ion-label>
+      <ion-select [(ngModel)]="documentType" placeholder="--Select document--">
+        <ion-select-option *ngFor="let doc of documentOptions" [value]="doc">{{ doc }}</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <!-- Purpose -->
+    <ion-item>
+      <ion-label position="floating">Purpose*</ion-label>
+      <ion-select [(ngModel)]="purpose" placeholder="--Select purpose--">
+        <ion-select-option *ngFor="let item of purposeOptions" [value]="item">{{ item }}</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <!-- Custom Purpose -->
+    <div *ngIf="purpose === 'Others'" class="custom-input">
+      <ion-item>
+        <ion-label position="floating">Enter your purpose*</ion-label>
+        <ion-input [(ngModel)]="customPurpose" placeholder="Type your purpose here..."></ion-input>
+      </ion-item>
+    </div>
+
+    <!-- Number of Copies & Requirements -->
+    <div *ngIf="purpose !== 'Others' && purpose !== ''">
+      <ion-item>
+        <ion-label position="floating">Number of Copies*</ion-label>
+        <input
+          type="number"
+          min="1"
+          [(ngModel)]="numberOfCopies"
+          class="native-input custom-number-input"
+        />
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Requirements / Authorization Photo*</ion-label>
+        <div class="upload-box" (click)="openPhotoOptions()">
+          <img
+            [src]="authorizationPhoto || 'assets/img/photo-placeholder.png'"
+            alt="Upload Authorization Photo"
+            class="upload-photo"
+          />
+          <p *ngIf="!authorizationPhoto" class="upload-instruction">
+            Tap to upload your authorization photo (Camera/Gallery)
+          </p>
+        </div>
+      </ion-item>
+    </div>
+
+    <!-- Buttons -->
+    <div class="btn-group">
+      <ion-button expand="block" fill="outline" color="medium" (click)="onCancel()">Cancel</ion-button>
+      <ion-button expand="block" color="primary" (click)="onContinue()">Request</ion-button>
+    </div>
+  </div>
+</ion-content>

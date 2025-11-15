@@ -1,0 +1,106 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Released Documents</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  <!-- Table Controls -->
+  <div class="table-controls">
+    <label>
+      Show 
+      <select [(ngModel)]="itemsPerPage" (change)="paginateDocuments()">
+        <option [value]="5">5</option>
+        <option [value]="10">10</option>
+        <option [value]="25">25</option>
+      </select>
+      entries
+    </label>
+    <input type="text" [(ngModel)]="searchTerm" (input)="filterDocuments()" placeholder="Search...">
+  </div>
+
+  <ion-spinner *ngIf="loading" name="crescent" class="spinner-center"></ion-spinner>
+
+  <!-- Documents Table -->
+  <ion-grid *ngIf="!loading && paginatedDocuments.length > 0">
+    <ion-row class="table-header">
+      <ion-col size="1">#</ion-col>
+      <ion-col size="5">Document</ion-col>
+      <ion-col size="3">Date Requested</ion-col>
+      <ion-col size="2">Status</ion-col>
+      <ion-col size="1">Action</ion-col>
+    </ion-row>
+
+    <ion-row *ngFor="let doc of paginatedDocuments; let i = index">
+      <ion-col size="1">{{ i + 1 + (currentPage - 1) * itemsPerPage }}</ion-col>
+      <ion-col size="5">{{ doc.documentType }}</ion-col>
+      <ion-col size="3">{{ doc.created_at | date:'medium' }}</ion-col>
+      <ion-col size="2">
+        <ion-text color="primary">{{ doc.status | titlecase }}</ion-text>
+      </ion-col>
+      <ion-col size="1">
+        <ion-button size="small" color="primary" (click)="openModal(doc)">
+          {{ isForPickup(doc) ? 'View Instructions' : 'View Details' }}
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <!-- No Documents -->
+  <ion-row *ngIf="!loading && paginatedDocuments.length === 0">
+    <ion-col size="12" class="ion-text-center">
+      <ion-text color="medium">No released documents found.</ion-text>
+    </ion-col>
+  </ion-row>
+
+  <!-- Pagination -->
+  <ion-row class="pagination-controls" *ngIf="!loading && totalPages > 1">
+    <ion-button size="small" (click)="prevPage()" [disabled]="currentPage === 1">Prev</ion-button>
+    <span>Page {{ currentPage }} of {{ totalPages }}</span>
+    <ion-button size="small" (click)="nextPage()" [disabled]="currentPage === totalPages">Next</ion-button>
+  </ion-row>
+</ion-content>
+
+<!-- Modal -->
+<ion-modal *ngIf="showModal" [isOpen]="showModal">
+  <ion-header>
+    <ion-toolbar color="light">
+      <ion-title>{{ isForPickup(selectedDocument) ? 'Instructions' : 'Details' }}</ion-title>
+      <ion-buttons slot="end">
+        <ion-button (click)="closeModal()">
+          <ion-icon name="close-outline"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content class="ion-padding">
+    <p><strong>Document:</strong> {{ selectedDocument?.documentType }}</p>
+    <p><strong>Date Requested:</strong> {{ selectedDocument?.created_at | date:'medium' }}</p>
+    <p><strong>Status:</strong> <ion-text color="primary">{{ selectedDocument?.status | titlecase }}</ion-text></p>
+
+    <!-- Instructions for Pickup -->
+    <div *ngIf="isForPickup(selectedDocument)">
+      <p><strong>Instructions for Claiming:</strong></p>
+      <ol>
+        <li>Bring 1 valid government-issued ID (UMID, PhilHealth, Student ID).</li>
+        <li>Bring exact amount if required for processing.</li>
+      </ol>
+      <p><strong>If you can’t pick up personally:</strong></p>
+      <ol>
+        <li>Provide an authorization letter.</li>
+        <li>Attach a photocopy of your ID and representative’s ID.</li>
+      </ol>
+      <ion-text color="warning">
+        <p>⚠️ Failure to claim within 6 months will result in cancellation.</p>
+      </ion-text>
+    </div>
+
+    <!-- Details for Completed -->
+    <div *ngIf="isCompleted(selectedDocument)">
+      <p><strong>Purpose:</strong> {{ selectedDocument?.purpose || 'N/A' }}</p>
+      <p><strong>Copies:</strong> {{ selectedDocument?.copies ?? 1 }}</p>
+      <p *ngIf="selectedDocument?.notes"><strong>Notes:</strong> {{ selectedDocument?.notes }}</p>
+    </div>
+  </ion-content>
+</ion-modal>

@@ -1,0 +1,188 @@
+/* === Menu Container === */
+ion-menu {
+  --width: 280px;
+  --background: transparent;
+}
+
+ion-menu::part(backdrop) {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.menu-content {
+  background-color: #ffffff;
+  border-radius: 16px;
+  margin: 20px 12px;
+  padding: 20px 10px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  height: calc(100% - 40px);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+  transition: all 0.2s ease-in-out;
+}
+
+/* === Scrollbar Styling (Webkit browsers) === */
+.menu-content::-webkit-scrollbar {
+  width: 6px;
+}
+.menu-content::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+.menu-content::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0, 0, 0, 0.35);
+}
+
+/* === Profile Section === */
+.profile-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 30px 0 20px;
+}
+
+.profile-pic img {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #ccc;
+  transition: transform 0.2s ease-in-out, border-color 0.2s ease-in-out;
+}
+
+.profile-pic img:hover {
+  transform: scale(1.05);
+  border-color: var(--ion-color-primary);
+}
+
+.user-name {
+  font-weight: 600;
+  font-size: 16px;
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  text-align: center;
+  cursor: pointer;
+  color: #222;
+}
+
+.edit-icon {
+  font-size: 16px;
+  color: #666;
+  transition: color 0.2s ease-in-out;
+}
+
+.user-name:hover .edit-icon {
+  color: var(--ion-color-primary);
+}
+
+/* === Menu Items === */
+ion-list {
+  padding: 0 12px;
+  margin-top: 10px;
+  flex: 1;
+}
+
+ion-item {
+  --padding-start: 16px;
+  --inner-padding-end: 10px;
+  border-radius: 12px;
+  margin: 5px 0;
+  font-size: 15px;
+  --min-height: 48px;
+  align-items: center;
+  --background-focused: #f0f0f0;
+  --background-hover: #f0f0f0;
+  transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+}
+
+ion-item:hover {
+  background-color: #f5f5f5;
+  transform: translateX(2px);
+}
+
+/* === Icons inside ion-item === */
+ion-item ion-icon[slot="start"] {
+  font-size: 22px;
+  color: #222;
+  min-width: 24px;
+  margin-right: 8px;
+}
+
+/* === Labels inside ion-item === */
+ion-label {
+  font-size: 15px;
+  color: #333;
+}
+
+/* === Date / Notes === */
+.date-box {
+  padding: 10px 16px;
+  text-align: right;
+  font-weight: bold;
+  color: var(--ion-color-medium);
+}
+
+.note {
+  font-size: 13px;
+  margin: 15px;
+  color: red;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.note ion-icon {
+  color: red;
+  font-size: 16px;
+}
+
+/* === Notification Button / Badge === */
+.notif-btn {
+  position: relative;
+}
+
+.notif-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  font-size: 0.7rem;
+  border-radius: 50%;
+  padding: 4px 6px;
+  background-color: #ff3b30;
+  color: #fff;
+  font-weight: bold;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+/* === Responsive Adjustments === */
+@media (max-width: 400px) {
+  ion-menu {
+    --width: 250px;
+  }
+
+  .menu-content {
+    margin: 10px 6px;
+    padding: 15px 8px;
+    border-radius: 12px;
+  }
+
+  .profile-pic img {
+    width: 70px;
+    height: 70px;
+  }
+
+  ion-item ion-icon[slot="start"] {
+    font-size: 20px;
+    margin-right: 6px;
+  }
+
+  .notif-badge {
+    top: -2px;
+    right: -2px;
+    padding: 3px 5px;
+  }
+}
